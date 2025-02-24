@@ -8,6 +8,8 @@ const nextConfig = {
       },
     ],
   },
+  // Enable build cache
+  output: 'standalone',
 }
 
 module.exports = nextConfig

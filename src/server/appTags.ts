@@ -3,8 +3,8 @@ import { createTriple } from "@/server/triples";
 import { serverEnv } from "@/lib/env";
 
 const customAppInfo = {
-  name: serverEnv.APP_NAME,
-  description: serverEnv.APP_DESCRIPTION,
+  name: serverEnv.APP_NAME || 'Default App Name',
+  description: serverEnv.APP_DESCRIPTION || 'Default App Description',
   image: serverEnv.APP_IMAGE, // Optional
   url: serverEnv.APP_URL, // Optional
 }
