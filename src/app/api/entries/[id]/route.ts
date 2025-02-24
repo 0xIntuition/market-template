@@ -3,10 +3,11 @@ import { getEntryById } from '@/server/entries'
 
 export async function GET(
   request: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const entry = await getEntryById(context.params.id)
+    const { id } = await params
+    const entry = await getEntryById(id)
 
     if (!entry) {
       return NextResponse.json(

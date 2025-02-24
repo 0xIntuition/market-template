@@ -3,10 +3,10 @@ import { createTriple } from "@/server/triples";
 import { serverEnv } from "@/lib/env";
 
 const customAppInfo = {
-  name: serverEnv.APP_NAME,
-  description: serverEnv.APP_DESCRIPTION,
-  image: serverEnv.APP_IMAGE, // Optional
-  url: serverEnv.APP_URL, // Optional
+  name: serverEnv.APP_NAME as string,
+  description: serverEnv.APP_DESCRIPTION as string,
+  image: serverEnv.APP_IMAGE as string, // Optional
+  url: serverEnv.APP_URL as string, // Optional
 }
 
 // Tag atom definitions

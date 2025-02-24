@@ -4,9 +4,9 @@ import { notFound } from 'next/navigation'
 import EntryDisplay from '@/app/entry/[id]/EntryDisplay'
 
 interface EntryPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EntryPage({ params }: EntryPageProps) {
