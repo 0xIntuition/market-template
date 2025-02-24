@@ -56,12 +56,13 @@ Want to deploy this app quickly? Use the button below to deploy to Render:
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/0xIntuition/market-template)
 
 > Note: You'll need to configure environment variables in the Render dashboard after deployment.
-> The Intuition MultiVault address is `0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665`
-> You will need an API Key, Environment ID, and Public Key for Dynamic.XYZ
-> You will need to generate a wallet and provide the private and public keys to the ENV
-> You will need an App Name and App Description for both the server and the client
-> The client uses this visually, whereas the server uses this to create a special atom for your app.
-> Hop into our discord if you have any questions!
+
+- The Intuition MultiVault address is `0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665`
+- You will need an API Key, Environment ID, and Public Key for Dynamic.XYZ
+- You will need to generate a wallet and provide the private and public keys to the ENV
+- You will need an App Name and App Description for both the server and the client
+- The client uses this visually, whereas the server uses this to create a special atom for your app.
+- Hop into our discord if you have any questions!
 
 The project includes a `render.yaml` file that configures the deployment settings for Render. This file:
 
