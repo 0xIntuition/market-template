@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: intuition-market
+    env: node
+    plan: starter
+    buildCommand: pnpm install && pnpm build
+    startCommand: pnpm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        sync: false
+        value: development
+      - key: MULTIVAULT_ADDRESS
+        sync: false
+        value: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665'
+      - key: PRIVATE_KEY
+        sync: false
+      - key: PUBLIC_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: development
+        sync: false
+      - key: DYNAMIC_API_KEY
+        sync: false
+      - key: DYNAMIC_PUBLIC_KEY
+        sync: false
+      - key: DYNAMIC_ENVIRONMENT_ID
+        sync: false
+      - key: APP_NAME
+        sync: false
+      - key: APP_DESCRIPTION
+        sync: false
+      - key: APP_IMAGE
+        sync: false
+        value: ''
+      - key: APP_URL
+        sync: false
+      - key: NEXT_PUBLIC_MULTIVAULT_ADDRESS
+        value: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665'
+      - key: NEXT_PUBLIC_ENVIRONMENT
+        value: development
+        sync: false
+      - key: NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID
+        sync: false
+      - key: NEXT_PUBLIC_APP_NAME
+        sync: false
+      - key: NEXT_PUBLIC_APP_DESCRIPTION
+        sync: false
+      - key: NEXT_PUBLIC_APP_IMAGE
+        sync: false
+        value: ''
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false

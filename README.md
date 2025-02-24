@@ -1,32 +1,96 @@
-# Overview
+# Intuition Market Template
 
-- This is a barebones Next.js app that works with 1ui, Next 15, and Turbopack
-- Add additional providers to `providers.tsx` -- this is already wrapping `layout.tsx`
-- You can see the use of the `'use client'` directive in the `providers.tsx` and `page.tsx`
-- Add pages directly to the `app` directory following Next's _app router_ conventions
-- Theming is set up and pulls from `1ui` -- any Shad components or Tailwind you write will respect this theme
+A Next.js 15 template for building Ethereum-based market platforms with tradable entries and ERC20-like vault shares.
+
+## 🚀 Features
+
+- **Entry Management**: Create and maintain tradable entries with IPFS metadata storage
+- **Vault Economics**: Deposit and redeem functionality with ERC20-like vault shares
+- **Sub-entry Hierarchy**: Organize content with parent-child relationships
+- **Smart Contract Integration**: MultiVault contract for asset management
+- **Wallet Authentication**: Secure user authentication via Dynamic Labs SDK
+- **Data Visualization**: Ownership pie charts and real-time vault statistics
+- **GraphQL Backend**: Robust API for entry management
+- **IPFS Integration**: Decentralized metadata storage
+- **Responsive Design**: Built with Tailwind CSS and container queries
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, React 18, Intuition's 1UI component library
+- **Styling**: Tailwind CSS, 1UI theming
+- **Blockchain**: Ethereum, Viem
+- **Authentication**: Dynamic Labs SDK
+- **Data Storage**: IPFS
+- **API**: GraphQL
+- **Build Tools**: Turbopack
+
+## 🏁 Getting Started
+
+### Prerequisites
+
+- Node.js (LTS version recommended)
+- pnpm 9.x
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Copy the environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+4. Fill out the environment variables in the `.env` file
+5. Run `pnpm new-wallet` to generate a new wallet to power your back-end. It will need to be funded in order to tag atoms that were created via your app.
+6. Start the development server:
+   ```bash
+   pnpm dev
+   ```
+
+## 🚀 Deployment
+
+Want to deploy this app quickly? Use the button below to deploy to Render:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/0xIntuition/market-template)
+
+> Note: You'll need to configure environment variables in the Render dashboard after deployment.
+> The Intuition MultiVault address is `0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665`
+> You will need an API Key, Environment ID, and Public Key for Dynamic.XYZ
+> You will need to generate a wallet and provide the private and public keys to the ENV
+> You will need an App Name and App Description for both the server and the client
+> The client uses this visually, whereas the server uses this to create a special atom for your app.
+> Hop into our discord if you have any questions!
+
+The project includes a `render.yaml` file that configures the deployment settings for Render. This file:
+
+- Sets up a web service with the appropriate build and start commands
+- Pre-configures some environment variables
+- Includes a health check endpoint
+- Marks sensitive environment variables that you'll need to set manually
+
+## 🧩 Project Structure
+
+- `src/app`: Next.js app router pages and API routes
+- `src/components`: Reusable UI components
+- `src/lib`: Utility functions and contract integrations
+- `src/server`: Server-side logic and API handlers
+- `src/types`: TypeScript type definitions
+- `src/styles`: Global styles and theme configuration
+
+## 💻 Development
+
+- Add additional providers to `providers.tsx` (already wrapping `layout.tsx`)
+- Add pages directly to the `app` directory following Next's app router conventions
+- Theming is set up and pulls from `1ui` - any Shad components or Tailwind you write will respect this theme
 - Recommended to add Shad components via the CLI, run in the root of this directory
 
-# Project Summary
+## 📝 Scripts
 
-1. 🏗️ Next.js 15 template integrating Intuition's 1UI component library and Turbopack
-2. 💼 Ethereum-based market platform for creating/maintaining tradable entries with ERC20-like vault shares
-3. 📦 Core features:
-   - Entry creation with IPFS metadata storage (`src/app/api/entries/route.ts:23-52`)
-   - Sub-entry hierarchy system (`src/components/NewSubEntryForm.tsx:16-163`)
-   - Vault economics with deposit/redeem functionality (`src/components/SwapModal.tsx:24-297`)
-4. 🔗 Smart contract integration:
-   - MultiVault contract for asset management (`src/lib/contracts.ts:3-17`)
-   - Atom/Triple system for content relationships (`src/server/appTags.ts:5-32`)
-5. 🔐 Wallet authentication via Dynamic Labs SDK (`src/app/providers.tsx:11-43`)
-6. 📊 Data visualization:
-   - Ownership pie charts (`src/components/EntryCard.tsx:236-247`)
-   - Real-time vault statistics (`src/components/EntryCard.tsx:215-234`)
-7. 🗃️ GraphQL backend integration for entry management (`src/server/entries.ts:37-116`)
-8. 🎨 1UI component library usage throughout UI:
-   - Cards, inputs, charts (`src/components/EntryCard.tsx:123-285`)
-   - Command palette search (`src/components/EntryFeed.tsx:151-180`)
-9. 🌐 IPFS integration for decentralized metadata storage (`src/server/atoms.ts:15-32`)
-10. 📱 Responsive design with Tailwind CSS and container queries (`tailwind.config.ts:6-17`)
-
-Key technologies: INTUITION, Next.js 15, 1UI, Ethereum, Viem, Dynamic Labs, IPFS, GraphQL, Turbopack
+- `pnpm dev`: Start development server with Turbopack
+- `pnpm build`: Build the application for production
+- `pnpm start`: Start the production server
+- `pnpm lint`: Run ESLint
+- `pnpm typecheck`: Run TypeScript type checking
+- `pnpm new-wallet`: Generate a new wallet to power your back-end
