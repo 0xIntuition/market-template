@@ -2,6 +2,8 @@ import { Providers } from '@/app/providers'
 import type { Metadata } from 'next'
 import { clientEnv } from '@/lib/env'
 
+import './globals.css'
+
 export const metadata: Metadata = {
   title: clientEnv.APP_NAME,
   description: clientEnv.APP_DESCRIPTION,

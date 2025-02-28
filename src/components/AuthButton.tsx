@@ -1,5 +1,5 @@
 import { useDynamicContext } from '@dynamic-labs/sdk-react-core'
-import { Button } from '@0xintuition/1ui'
+import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
 import { useState, useEffect } from 'react'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -36,12 +36,12 @@ export function AuthButton() {
           <span className="text-sm">
             {ensName || `${primaryWallet.address?.slice(0, 6)}...${primaryWallet.address?.slice(-4)}`}
           </span>
-          <Button variant="secondary" onClick={handleLogOut}>
+          <Button variant={ButtonVariant.secondary} size={ButtonSize.md} onClick={handleLogOut}>
             Disconnect
           </Button>
         </div>
       ) : (
-        <Button variant="secondary" onClick={() => setShowAuthFlow(true)}>
+        <Button variant={ButtonVariant.secondary} size={ButtonSize.md} onClick={() => setShowAuthFlow(true)}>
           Connect
         </Button>
       )}

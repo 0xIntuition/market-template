@@ -35,6 +35,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      lucide-react:
+        specifier: ^0.476.0
+        version: 0.476.0(react@18.3.1)
       next:
         specifier: 15.1.1
         version: 15.1.1(@babel/core@7.26.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4363,6 +4366,11 @@ packages:
     resolution: {integrity: sha512-0vfExYtvSDhkC2lqg0zYVW1Uu9GsI4knuV9GP9by5z0Xhc4Zi5RejTxfz9LsjRmCyWVzHCJvxGKZWcRyvQCWVg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+
+  lucide-react@0.476.0:
+    resolution: {integrity: sha512-x6cLTk8gahdUPje0hSgLN1/MgiJH+Xl90Xoxy9bkPAsMPOUiyRSKR4JCDPGVCEpyqnZXH3exFWNItcvra9WzUQ==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   make-dir@2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
@@ -11847,6 +11855,10 @@ snapshots:
       yallist: 3.1.1
 
   lucide-react@0.441.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
+  lucide-react@0.476.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
