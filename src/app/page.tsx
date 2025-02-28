@@ -23,7 +23,7 @@ export default async function Page(props: { searchParams: Promise<{ [key: string
         <div className="w-full mb-16">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             <div className="max-w-xl space-y-4">
-              <h1 className="text-4xl font-medium tracking-tight">Ecosystems Project</h1>
+              <h1 className="text-4xl font-medium tracking-tight">Ecosystems</h1>
               <HomeActions />
             </div>
           </div>
