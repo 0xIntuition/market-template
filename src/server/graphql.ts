@@ -99,6 +99,7 @@ export type GetAppsResponse = {
     }
     vault: {
       position_count: number
+      // TODO: Add filtering and sorting by TVL instead of number of positions
       verifiedPosition: Array<{
         shares: string
         account_id: string
