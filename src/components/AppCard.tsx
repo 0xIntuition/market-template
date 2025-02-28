@@ -22,7 +22,20 @@ interface AppCardProps {
   className?: string
 }
 
+// Helper function to check if a string is a valid URL
+const isValidUrl = (url: string): boolean => {
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function AppCard({ app, className = '' }: AppCardProps) {
+  // Check if the app URL is valid
+  const validUrl = app.url && isValidUrl(app.url)
+
   return (
     <Card className={`bg-background border border-primary/20 rounded-xl p-6 relative ${className}`}>
       <div className="flex justify-between items-start mb-4">
@@ -35,7 +48,18 @@ export function AppCard({ app, className = '' }: AppCardProps) {
               <h3 className="text-xl font-medium">{app.label}</h3>
               {app.verified && <CheckCircle className="h-5 w-5 text-warning" aria-label="Verified" />}
             </div>
-            <p className="text-foreground/70 font-light">{app.url ?? ' '}</p>
+            {validUrl ? (
+              <a
+                href={app.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent font-light hover:underline"
+              >
+                {app.url}
+              </a>
+            ) : (
+              <p className="text-foreground/70 font-light">{app.url ?? ' '}</p>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-1">
