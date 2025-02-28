@@ -5,17 +5,11 @@ import AppFeed from '@/components/AppFeed'
 import { getApps, SortOption } from '@/server/graphql'
 import { serverEnv } from '@/lib/env'
 
-export default async function Page({
-  searchParams = {},
-}: {
-  searchParams?: {
-    type?: EntryListType
-    sort?: SortOption
-    tags?: string
-    q?: string
-    verified?: string
-  }
-}) {
+// In Next.js 15, searchParams is a Promise
+export default async function Page(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  // Await the searchParams Promise
+  const searchParams = await props.searchParams
+
   // Use default sort - don't try to access searchParams properties directly
   const defaultSort: SortOption = 'likes'
 
