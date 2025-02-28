@@ -1,11 +1,10 @@
 services:
   - type: web
     name: intuition-market
+    region: oregon
     env: node
     plan: starter
-    buildCommand: bun install && bun run build
-    startCommand: bun start
-    healthCheckPath: /api/health
+    healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: development
