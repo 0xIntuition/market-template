@@ -17,8 +17,8 @@ export const client = createServerClient({})
 export type PinThingInput = {
   name: string
   description: string
-  image?: string
-  url?: string
+  image: string
+  url: string
 }
 
 export type PinThingResponse = {
@@ -50,27 +50,30 @@ export type QueryAtomByNameResponse = {
   }>
 }
 
-export const queryAtomByName = async (name: string): Promise<bigint | null> => {
+export const queryAtomBySchemaValues = async (name: string, description: string, image: string, url: string): Promise<bigint | null> => {
   try {
     const result = await client.request<QueryAtomByNameResponse>(`
-      query FindAtom($name: String!) {
+      query FindAtom($name: String!, $description: String!, $image: String!, $url: String!) {
         atoms(where: {
           value: {
             thing: {
-              name: { _eq: $name }
+              name: { _eq: $name },
+              description: { _eq: $description },
+              image: { _eq: $image },
+              url: { _eq: $url }
             }
           }
         }) {
           vault_id
         }
       }
-    `, { name })
+    `, { name, description, image, url })
     if (result.atoms.length > 0) {
       return BigInt(result.atoms[0].vault_id)
     }
     return null
   } catch (error) {
-    console.error('Failed to query atom by name:', error)
+    console.error('Failed to query atom by schema values:', error)
     throw error
   }
 }

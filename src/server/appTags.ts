@@ -14,13 +14,15 @@ export const APP_TAG = {
   predicate: {
     name: "Is Used By",
     description: "Predicate for linking content to applications",
+    image: "",
+    url: "",
   },
   object: {
     name: customAppInfo.name,
     description: customAppInfo.description,
     // Feel free to add fields for:
-    // image, // url to the logo for your application
-    // url, // url for your application
+    image: customAppInfo.image, // url to the logo for your application
+    url: customAppInfo.url, // url for your application
   },
 };
 
@@ -28,14 +30,20 @@ export const TYPE_TAG = {
   predicate: {
     name: "Is Type",
     description: "Predicate for marking content type",
+    image: "",
+    url: "",
   },
   entryObject: {
     name: "Entry",
     description: "An Entry in the Intuition Market Template App",
+    image: "",
+    url: "",
   },
   subEntryObject: {
     name: "Sub-Entry",
     description: "A Sub-Entry in the Intuition Market Template App",
+    image: "",
+    url: "",
   },
 };
 
@@ -43,6 +51,8 @@ export const SUBENTRY_TAG = {
   predicate: {
     name: "Is Sub-Entry Of",
     description: "Predicate for linking Sub-Entries to Entries",
+    image: "",
+    url: "",
   },
 };
 
