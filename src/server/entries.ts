@@ -1,6 +1,6 @@
 import type { Entry } from '@/types'
 import { client } from '@/server/graphql'
-import { getTypeTagAtomIds } from '@/server/appTags'
+import { getAppTagAtomIds, getTypeTagAtomIds } from '@/server/appTags'
 import { getNumSubEntriesForEntry } from '@/server/subEntries'
 import { getVaultTotals } from '@/server/contracts'
 
@@ -174,6 +174,77 @@ export async function getEntryById(id: string): Promise<Entry | null> {
     })
 
     if (!result.atom || result.triples.length === 0) return null
+
+    const atom = result.atom
+
+    const totals = await getVaultTotals(BigInt(atom.id))
+    return {
+      id: atom.id,
+      name: atom.value.thing.name,
+      description: atom.value.thing.description,
+      image: atom.value.thing.image,
+      url: atom.value.thing.url,
+      totalAssets: totals.totalAssets.toString(),
+      totalShares: totals.totalShares.toString(),
+      createdAt: new Date(parseInt(atom.block_timestamp) * 1000).toISOString(),
+      creator: atom.creator_id
+    }
+  } catch (error) {
+    console.error('Failed to fetch entry:', error)
+    return null
+  }
+}
+
+export async function getAppEntry(): Promise<Entry | null> {
+  // Get the necessary atom IDs first
+  // const { predicateId: typePredicateId, entryId: entryTypeId } = await getTypeTagAtomIds()
+  const { objectId: appTypeId } = await getAppTagAtomIds()
+
+  const query = `
+    query GetEntry($id: numeric!) {
+      atom(id: $id) {
+        id
+        value {
+          thing {
+            name
+            description
+            image
+            url
+          }
+        }
+        creator_id
+        block_timestamp
+      } 
+    }
+  `
+
+  try {
+    const result = await client.request<{
+      atom: {
+        id: string
+        value: {
+          thing: {
+            name: string
+            description: string
+            image: string
+            url: string
+          }
+        }
+        creator_id: string
+        block_timestamp: string
+        signals_aggregate: {
+          aggregate: {
+            sum: {
+              delta: number
+            }
+          }
+        }
+      }
+    }>(query, {
+      id: appTypeId.toString()
+    })
+
+    if (!result.atom) return null
 
     const atom = result.atom
 
