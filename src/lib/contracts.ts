@@ -14,6 +14,7 @@ export const MULTIVAULT_ABI = parseAbi([
   'function redeemAtom(uint256 shares, address receiver, uint256 id) returns (uint256)',
   'function vaults(uint256) view returns (uint256 totalAssets, uint256 totalShares)',
   'function approveSender(address sender)',
+  'function bondingCurveConfig() view returns (address, uint256)',
   'error EthMultiVault_AdminOnly()',
   'error EthMultiVault_ArraysNotSameLength()',
   'error EthMultiVault_AtomDoesNotExist(uint256 atomId)',
@@ -49,4 +50,20 @@ export const MULTIVAULT_ABI = parseAbi([
   'error EthMultiVault_VaultIsTriple(uint256 vaultId)',
   'error EthMultiVault_VaultNotAtom()',
   'error EthMultiVault_VaultNotTriple()'
+])
+
+export const BONDING_CURVE_REGISTRY_ABI = parseAbi([
+  'function previewDeposit(uint256 assets, uint256 totalAssets, uint256 totalShares, uint256 id) view returns (uint256 shares)',
+  'function previewRedeem(uint256 shares, uint256 totalShares, uint256 totalAssets, uint256 id) view returns (uint256 assets)',
+  'function previewWithdraw(uint256 assets, uint256 totalAssets, uint256 totalShares, uint256 id) view returns (uint256 shares)',
+  'function previewMint(uint256 shares, uint256 totalShares, uint256 totalAssets, uint256 id) view returns (uint256 assets)',
+  'function convertToShares(uint256 assets, uint256 totalAssets, uint256 totalShares, uint256 id) view returns (uint256 shares)',
+  'function convertToAssets(uint256 shares, uint256 totalShares, uint256 totalAssets, uint256 id) view returns (uint256 assets)',
+  'function currentPrice(uint256 totalShares, uint256 id) view returns (uint256 sharePrice)',
+  'function getCurveName(uint256 id) view returns (string)',
+  'function getCurveMaxShares(uint256 id) view returns (uint256)',
+  'function getCurveMaxAssets(uint256 id) view returns (uint256)',
+  'function count() view returns (uint256)',
+  'function curveAddresses(uint256 id) view returns (address)',
+  'function curveIds(address curve) view returns (uint256)'
 ])

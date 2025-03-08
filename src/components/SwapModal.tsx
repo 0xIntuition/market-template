@@ -345,7 +345,7 @@ export function SwapModal({
       <div className="space-y-1 border-t border-white/20 pt-4">
         <div className="flex justify-between">
           <Text variant="caption">Current Share Price:</Text>
-          <Text variant="caption">{formatValue(BigInt(sharePrice))} : 1</Text>
+          <Text variant="caption">{formatValue(BigInt(sharePrice))} wei : 1 share</Text>
         </div>
         <div className="flex justify-between">
           <Text variant="caption">Assets In Pool:</Text>

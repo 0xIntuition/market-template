@@ -1,7 +1,7 @@
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { serverEnv } from '@/lib/env'
-import { MULTIVAULT_ABI } from '../lib/contracts'
+import { MULTIVAULT_ABI, BONDING_CURVE_REGISTRY_ABI } from '../lib/contracts'
 import { base, baseSepolia } from 'viem/chains'
 import { extractAtomIdFromReceipt, extractTripleIdFromReceipt } from './txReceipt'
 
@@ -29,6 +29,8 @@ function hex(value: string | undefined): `0x${string}` {
 
 // Repeatedly used
 const multiVaultAddress = hex(serverEnv.MULTIVAULT_ADDRESS)
+const multiVault15Address = hex(serverEnv.MULTIVAULT_ADDRESS_1_5)
+const [bondingCurveRegistryAddr,] = await getBondingCurveRegistryAddress();
 
 // WRITES:
 
@@ -122,5 +124,33 @@ export async function getCurrentSharePrice(atomId: bigint) {
     abi: MULTIVAULT_ABI,
     functionName: 'currentSharePrice',
     args: [atomId]
+  })
+}
+
+export async function getBondingCurveRegistryAddress() {
+  const [address, defaultCurveId] = await publicClient.readContract({
+    address: multiVault15Address,
+    abi: MULTIVAULT_ABI,
+    functionName: 'bondingCurveConfig'
+  })
+  return [address, defaultCurveId]
+}
+
+export async function convertToAssets(shares: bigint, totalShares: bigint, totalAssets: bigint, curveId: bigint) {
+  const price = await publicClient.readContract({
+    address: bondingCurveRegistryAddr as `0x${string}`,
+    abi: BONDING_CURVE_REGISTRY_ABI,
+    functionName: 'convertToAssets',
+    args: [shares, totalShares, totalAssets, curveId]
+  });
+  return price
+}
+
+export async function getCurveName(curveId: bigint) {
+  return publicClient.readContract({
+    address: bondingCurveRegistryAddr as `0x${string}`,
+    abi: BONDING_CURVE_REGISTRY_ABI,
+    functionName: 'getCurveName',
+    args: [curveId]
   })
 }
