@@ -1,15 +1,17 @@
-import { getAppEntry } from '@/server/entries'
-import { notFound } from 'next/navigation'
-import AppEntryDisplay from '@/app/entry/app/AppEntryDisplay'
+export const dynamic = 'force-dynamic'
 
-export default async function AppEntryPage() {
+import { getAppEntry } from '@/server/entries'
+import AppEntryDisplay from '@/app/entry/app/AppEntryDisplay'
+import { Suspense } from 'react'
+
+export default function AppEntryPage() {
   // Await params before using its properties
 
-  const entry = await getAppEntry()
+  const entry = getAppEntry()
 
-  if (!entry) {
-    notFound()
-  }
-
-  return <AppEntryDisplay entry={{ ...entry }} />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AppEntryDisplay entry={{ ...entry }} />
+    </Suspense>
+  )
 }
