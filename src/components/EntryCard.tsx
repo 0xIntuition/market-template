@@ -10,6 +10,7 @@ import { mainnet } from 'viem/chains'
 import { Entry } from '@/types'
 import { formatValue } from '@/lib/formatValue'
 import { SwapModal, type SwapType } from '@/components/SwapModal'
+import { LineChart } from '@/components/LineChart'
 
 // Create a public client for ENS lookups (always use mainnet for ENS)
 const ensClient = createPublicClient({
@@ -29,6 +30,11 @@ type EntryStats = {
   sharePrice: string
 }
 
+type PriceCurvePoint = {
+  x: number
+  y: number
+}
+
 interface EntryCardProps {
   entry: Entry & { stats?: EntryStats }
   showShare?: boolean
@@ -44,6 +50,8 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
   const [stats, setStats] = useState<EntryStats | undefined>(entry.stats)
   const [userBalance, setUserBalance] = useState('0')
   const [creatorEns, setCreatorEns] = useState<string | null>(null)
+  const [curvePoints, setCurvePoints] = useState<PriceCurvePoint[]>([])
+  const [currentSharePoint, setCurrentSharePoint] = useState<PriceCurvePoint | undefined>()
 
   const fetchStats = async () => {
     const userAddress = !primaryWallet?.address ? '0x0000000000000000000000000000000000000000' : primaryWallet.address
@@ -83,6 +91,26 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
     }
   }
 
+  const fetchPriceCurve = async () => {
+    try {
+      const response = await fetch(
+        `/api/price-curve?atomId=${entry.id}${stats ? `&totalShares=${stats.vaultTotals.totalShares}` : ''}`
+      )
+      if (!response.ok) throw new Error('Failed to fetch price curve')
+      const data = await response.json()
+      console.log('Fetched price curve:', data)
+      setCurvePoints(data.points)
+
+      // Use the special point from the API response
+      if (data.specialPoint) {
+        console.log('Setting current share point:', data.specialPoint)
+        setCurrentSharePoint(data.specialPoint)
+      }
+    } catch (err) {
+      console.error('Error fetching price curve:', err)
+    }
+  }
+
   useEffect(() => {
     fetchStats()
   }, [entry.id, primaryWallet?.address])
@@ -95,9 +123,16 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
     fetchCreatorEns()
   }, [entry.creator])
 
+  // Only fetch price curve when we have stats
+  useEffect(() => {
+    if (stats) {
+      fetchPriceCurve()
+    }
+  }, [stats])
+
   const handleSwapSuccess = async () => {
-    // Refresh both stats and balance
-    await Promise.all([fetchStats(), fetchBalance()])
+    // Refresh stats, balance, and price curve
+    await Promise.all([fetchStats(), fetchBalance(), fetchPriceCurve()])
   }
 
   const handleImageError = () => {
@@ -153,7 +188,7 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
           }
         }
       `}</style>
-      <div className="entry-grid" style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '2rem' }}>
+      <div className="entry-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem' }}>
         {/* Left column - Atom Info Section */}
         <div
           className="flex flex-col gap-2 p-4 rounded-xl border border-white/20 relative"
@@ -223,7 +258,42 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
           )}
         </div>
 
-        {/* Middle column - Combined Economics */}
+        {/* Middle column - Line Chart */}
+        <Card className="p-4 relative" style={{ background: '#000000' }}>
+          {/* Title with container effect */}
+          <div className="relative mb-6">
+            <Separator
+              orientation="horizontal"
+              decorative
+              className="absolute"
+              style={{
+                backgroundColor: 'white',
+                opacity: '1',
+                height: '1px',
+                width: 'calc(100% + 2rem)',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                left: '-1rem',
+              }}
+            />
+            <div className="flex justify-center">
+              <Text variant="h3" className="relative px-4 mx-auto" style={{ background: '#000000' }}>
+                Price Chart
+              </Text>
+            </div>
+          </div>
+
+          <div className="h-48">
+            <LineChart
+              points={curvePoints}
+              specialPoint={currentSharePoint as PriceCurvePoint}
+              xAxisLabel="SHARES"
+              yAxisLabel="PRICE"
+            />
+          </div>
+        </Card>
+
+        {/* Right column - Vault Overview */}
         <Card className="p-4 relative" style={{ background: '#000000' }}>
           {showSwapModal && primaryWallet ? (
             <SwapModal
@@ -287,7 +357,9 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
                   <Text variant="caption">Total Shares</Text>
                   <Text variant="body">{formatValue(BigInt(stats?.vaultTotals?.totalShares || '0'), true, false)}</Text>
                   <Text variant="caption">Share Price</Text>
-                  <Text variant="body">{formatValue(BigInt(stats?.sharePrice || '0'), false, false)} : 1</Text>
+                  <Text variant="body">
+                    {formatValue(BigInt(stats?.sharePrice || '0'), false, false)} wei : 1 share
+                  </Text>
                 </div>
                 <div className="text-right">
                   <Text variant="caption">Your Assets</Text>

@@ -23,6 +23,8 @@ interface SwapModalProps {
 
 const QUICK_AMOUNTS = ['0.01', '0.1', '1.0']
 
+const curveId = 3
+
 export function SwapModal({
   type,
   atomId,
@@ -98,8 +100,8 @@ export function SwapModal({
       const estimate = await publicClient.readContract({
         address: clientEnv.MULTIVAULT_ADDRESS as `0x${string}`,
         abi: MULTIVAULT_ABI,
-        functionName: type === 'deposit' ? 'previewDeposit' : 'previewRedeem',
-        args: [type === 'deposit' ? assets : shares, BigInt(atomId)],
+        functionName: type === 'deposit' ? 'previewDepositCurve' : 'previewRedeemCurve',
+        args: [type === 'deposit' ? assets : shares, BigInt(atomId), BigInt(curveId)],
       })
 
       setEstimatedOutput(estimate.toString())
@@ -125,11 +127,11 @@ export function SwapModal({
       // Prepare transaction data
       const fnData = encodeFunctionData({
         abi: MULTIVAULT_ABI,
-        functionName: type === 'deposit' ? 'depositAtom' : 'redeemAtom',
+        functionName: type === 'deposit' ? 'depositAtomCurve' : 'redeemAtomCurve',
         args:
           type === 'deposit'
-            ? [walletClient.account.address, BigInt(atomId)]
-            : [BigInt(amount), walletClient.account.address, BigInt(atomId)],
+            ? [walletClient.account.address, BigInt(atomId), BigInt(curveId)]
+            : [BigInt(amount), walletClient.account.address, BigInt(atomId), BigInt(curveId)],
       })
 
       const txData = {
@@ -345,7 +347,7 @@ export function SwapModal({
       <div className="space-y-1 border-t border-white/20 pt-4">
         <div className="flex justify-between">
           <Text variant="caption">Current Share Price:</Text>
-          <Text variant="caption">{formatValue(BigInt(sharePrice))} : 1</Text>
+          <Text variant="caption">{formatValue(BigInt(sharePrice))} wei : 1 share</Text>
         </div>
         <div className="flex justify-between">
           <Text variant="caption">Assets In Pool:</Text>

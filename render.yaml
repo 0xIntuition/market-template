@@ -10,7 +10,7 @@ services:
       - key: NODE_ENV
         value: development
       - key: MULTIVAULT_ADDRESS
-        value: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665'
+        value: '0x63B90A9c109fF8f137916026876171ffeEdEe714'
       - key: PRIVATE_KEY
         sync: false
       - key: PUBLIC_KEY
@@ -32,7 +32,7 @@ services:
       - key: APP_URL
         sync: false
       - key: NEXT_PUBLIC_MULTIVAULT_ADDRESS
-        value: '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665'
+        value: '0x63B90A9c109fF8f137916026876171ffeEdEe714'
       - key: NEXT_PUBLIC_ENVIRONMENT
         value: development
       - key: NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID

@@ -2,8 +2,8 @@ import { createServerClient, configureClient } from '@0xintuition/graphql'
 import { serverEnv } from '@/lib/env'
 
 // API endpoints
-const API_URL_PROD = 'https://intuition-api.com/v1/graphql'
-const API_URL_DEV = 'https://prod.base-sepolia.intuition-api.com/v1/graphql'
+const API_URL_PROD = 'https://intuition-api.com/v1/graphql' // Base 1.5 backend not deployed yet
+const API_URL_DEV = 'https://prod.base-sepolia-v-1-5.intuition-api.com/v1/graphql'
 
 // Configure GraphQL client based on environment
 configureClient({
@@ -46,7 +46,7 @@ export const pinThing = async (thing: PinThingInput) => {
 // Query atoms by name
 export type QueryAtomByNameResponse = {
   atoms: Array<{
-    vault_id: string
+    id: string
   }>
 }
 
@@ -64,12 +64,12 @@ export const queryAtomBySchemaValues = async (name: string, description: string,
             }
           }
         }) {
-          vault_id
+          id
         }
       }
     `, { name, description, image, url })
     if (result.atoms.length > 0) {
-      return BigInt(result.atoms[0].vault_id)
+      return BigInt(result.atoms[0].id)
     }
     return null
   } catch (error) {

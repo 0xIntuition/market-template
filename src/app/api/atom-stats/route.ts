@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getVaultState, getVaultTotals, getCurrentSharePrice } from '@/server/contracts'
+import { getCurrentSharePriceCurve, getVaultStateCurve, getVaultTotalsCurve } from '@/server/contracts'
 
+const curveId = 3
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const atomId = searchParams.get('atomId')
@@ -15,9 +16,9 @@ export async function GET(request: Request) {
 
   try {
     const [userState, vaultTotals, sharePrice] = await Promise.all([
-      getVaultState(BigInt(atomId), userAddress),
-      getVaultTotals(BigInt(atomId)),
-      getCurrentSharePrice(BigInt(atomId))
+      getVaultStateCurve(BigInt(atomId), BigInt(curveId), userAddress),
+      getVaultTotalsCurve(BigInt(atomId), BigInt(curveId)),
+      getCurrentSharePriceCurve(BigInt(atomId), BigInt(curveId))
     ])
 
     console.log('userState', userState)
