@@ -24,9 +24,10 @@ export async function GET(request: Request) {
       totalShares = vaultTotals.totalShares || 0n
     }
 
-    // Calculate the end point (totalShares * 2 with a minimum of 1e17)
+    // Calculate the end point (totalShares * 3 with a minimum of 1000)
     const start = 0n
-    const end = totalShares * 2n > 10n ** 17n ? totalShares * 2n : 10n ** 17n
+    const MIN_SHARES = 1000n
+    const end = totalShares * 3n > MIN_SHARES ? totalShares * 3n : MIN_SHARES
 
     // Get the price curve points
     const [curvePoints, currentPricePoint] = await getPoints(start, end, totalShares)

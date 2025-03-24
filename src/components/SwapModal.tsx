@@ -23,6 +23,8 @@ interface SwapModalProps {
 
 const QUICK_AMOUNTS = ['0.01', '0.1', '1.0']
 
+const curveId = 3
+
 export function SwapModal({
   type,
   atomId,
@@ -98,8 +100,8 @@ export function SwapModal({
       const estimate = await publicClient.readContract({
         address: clientEnv.MULTIVAULT_ADDRESS as `0x${string}`,
         abi: MULTIVAULT_ABI,
-        functionName: type === 'deposit' ? 'previewDeposit' : 'previewRedeem',
-        args: [type === 'deposit' ? assets : shares, BigInt(atomId)],
+        functionName: type === 'deposit' ? 'previewDepositCurve' : 'previewRedeemCurve',
+        args: [type === 'deposit' ? assets : shares, BigInt(atomId), BigInt(curveId)],
       })
 
       setEstimatedOutput(estimate.toString())
@@ -125,11 +127,11 @@ export function SwapModal({
       // Prepare transaction data
       const fnData = encodeFunctionData({
         abi: MULTIVAULT_ABI,
-        functionName: type === 'deposit' ? 'depositAtom' : 'redeemAtom',
+        functionName: type === 'deposit' ? 'depositAtomCurve' : 'redeemAtomCurve',
         args:
           type === 'deposit'
-            ? [walletClient.account.address, BigInt(atomId)]
-            : [BigInt(amount), walletClient.account.address, BigInt(atomId)],
+            ? [walletClient.account.address, BigInt(atomId), BigInt(curveId)]
+            : [BigInt(amount), walletClient.account.address, BigInt(atomId), BigInt(curveId)],
       })
 
       const txData = {

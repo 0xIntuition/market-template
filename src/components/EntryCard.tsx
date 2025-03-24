@@ -93,14 +93,17 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
 
   const fetchPriceCurve = async () => {
     try {
-      const response = await fetch(`/api/price-curve?atomId=${entry.id}${stats ? `&totalShares=${stats.vaultTotals.totalShares}` : ''}`)
+      const response = await fetch(
+        `/api/price-curve?atomId=${entry.id}${stats ? `&totalShares=${stats.vaultTotals.totalShares}` : ''}`
+      )
       if (!response.ok) throw new Error('Failed to fetch price curve')
       const data = await response.json()
       console.log('Fetched price curve:', data)
       setCurvePoints(data.points)
-      
+
       // Use the special point from the API response
       if (data.specialPoint) {
+        console.log('Setting current share point:', data.specialPoint)
         setCurrentSharePoint(data.specialPoint)
       }
     } catch (err) {

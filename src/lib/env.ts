@@ -9,7 +9,6 @@ export const serverEnv = {
   APP_IMAGE: process.env.APP_IMAGE,
   APP_URL: process.env.APP_URL,
   MULTIVAULT_ADDRESS: process.env.MULTIVAULT_ADDRESS,
-  MULTIVAULT_ADDRESS_1_5: process.env.MULTIVAULT_ADDRESS_1_5, // temporary
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   PUBLIC_KEY: process.env.PUBLIC_KEY,
   ENVIRONMENT: process.env.ENVIRONMENT,
@@ -44,7 +43,6 @@ export function validateServerEnv(): void {
     // 'APP_IMAGE',
     // 'APP_URL',
     'MULTIVAULT_ADDRESS',
-    'MULTIVAULT_ADDRESS_1_5',
     'PRIVATE_KEY',
     'PUBLIC_KEY',
     'ENVIRONMENT',

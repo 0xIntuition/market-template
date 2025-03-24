@@ -29,7 +29,6 @@ function hex(value: string | undefined): `0x${string}` {
 
 // Repeatedly used
 const multiVaultAddress = hex(serverEnv.MULTIVAULT_ADDRESS)
-const multiVault15Address = hex(serverEnv.MULTIVAULT_ADDRESS_1_5)
 const [bondingCurveRegistryAddr,] = await getBondingCurveRegistryAddress();
 
 // WRITES:
@@ -108,12 +107,32 @@ export async function getVaultState(atomId: bigint, address: string) {
   return { shares, assets }
 }
 
+export async function getVaultStateCurve(atomId: bigint, curveId: bigint, address: string) {
+  const [shares, assets] = await publicClient.readContract({
+    address: multiVaultAddress,
+    abi: MULTIVAULT_ABI,
+    functionName: 'getVaultStateForUserCurve',
+    args: [atomId, curveId, address as `0x${string}`]
+  })
+  return { shares, assets }
+}
+
 export async function getVaultTotals(atomId: bigint) {
   const [totalAssets, totalShares] = await publicClient.readContract({
     address: multiVaultAddress,
     abi: MULTIVAULT_ABI,
     functionName: 'vaults',
     args: [atomId]
+  })
+  return { totalAssets, totalShares }
+}
+
+export async function getVaultTotalsCurve(atomId: bigint, curveId: bigint) {
+  const [totalAssets, totalShares] = await publicClient.readContract({
+    address: multiVaultAddress,
+    abi: MULTIVAULT_ABI,
+    functionName: 'getCurveVaultState',
+    args: [atomId, curveId]
   })
   return { totalAssets, totalShares }
 }
@@ -127,9 +146,18 @@ export async function getCurrentSharePrice(atomId: bigint) {
   })
 }
 
+export async function getCurrentSharePriceCurve(atomId: bigint, curveId: bigint) {
+  return publicClient.readContract({
+    address: multiVaultAddress,
+    abi: MULTIVAULT_ABI,
+    functionName: 'currentSharePriceCurve',
+    args: [atomId, curveId]
+  })
+}
+
 export async function getBondingCurveRegistryAddress() {
   const [address, defaultCurveId] = await publicClient.readContract({
-    address: multiVault15Address,
+    address: multiVaultAddress,
     abi: MULTIVAULT_ABI,
     functionName: 'bondingCurveConfig'
   })
