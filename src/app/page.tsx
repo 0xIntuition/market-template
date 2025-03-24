@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getEntries } from '@/server/entries'
 import { EntryFeed } from '@/components/EntryFeed'
 import type { EntryListType } from '@/server/entries'
