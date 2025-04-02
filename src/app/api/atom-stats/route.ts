@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getCurrentSharePriceCurve, getVaultStateCurve, getVaultTotalsCurve } from '@/server/contracts'
 
-const curveId = 3
+const curveId = 4
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const atomId = searchParams.get('atomId')

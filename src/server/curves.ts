@@ -1,6 +1,6 @@
 import { getCurveName, convertToAssets } from "./contracts";
 
-const bondingCurveId = 3n; // adjust as needed -- using linearCurve while backend still adding support for 1.5
+const bondingCurveId = 4n; // adjust as needed
 const curveName = await getCurveName(bondingCurveId)
 console.log("curveName: " + curveName)
 

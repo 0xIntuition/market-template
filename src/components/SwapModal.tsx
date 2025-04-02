@@ -23,7 +23,7 @@ interface SwapModalProps {
 
 const QUICK_AMOUNTS = ['0.01', '0.1', '1.0']
 
-const curveId = 3
+const curveId = 4
 
 export function SwapModal({
   type,
