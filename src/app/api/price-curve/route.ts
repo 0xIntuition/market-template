@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getPoints } from '@/server/curves'
 import { getVaultTotals } from '@/server/contracts'
 
-let maxSharesShown = 10000000000000000000n // sensible minimum of 10e18
+let maxSharesShown = 1000000000000000000n // sensible minimum of 1e18
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
