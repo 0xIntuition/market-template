@@ -43,7 +43,7 @@ export async function getNumSubEntriesForEntry(entryId: string): Promise<number>
 type GetSubEntriesResponse = {
   triples: Array<{
     subject: {
-      id: string
+      term_id: string
       value: {
         thing: {
           name: string
@@ -78,10 +78,10 @@ export async function getSubEntriesForEntry(entryId: bigint, limit: number = 10,
         },
         limit: $limit,
         offset: $offset,
-        order_by: [{ subject: { vault: { total_shares: desc } } }]
+        order_by: [{ subject: { term: { total_theoretical_value_locked: desc } } }]
       ) {
         subject {
-          id
+          term_id
           value {
             thing {
               name
@@ -92,8 +92,8 @@ export async function getSubEntriesForEntry(entryId: bigint, limit: number = 10,
           }
           creator_id
           block_timestamp
-          vault {
-            total_shares
+          term {
+            total_theoretical_value_locked
           }
         }
       }
@@ -117,9 +117,9 @@ export async function getSubEntriesForEntry(entryId: bigint, limit: number = 10,
         return null
       }
 
-      const totals = await getVaultTotals(BigInt(atom.id))
+      const totals = await getVaultTotals(BigInt(atom.term_id))
       const subEntry: SubEntry = {
-        id: atom.id,
+        id: atom.term_id,
         entryId: entryId.toString(), // Sub entry is associated with input entry ID
         name: atom.value.thing.name,
         description: atom.value.thing.description,

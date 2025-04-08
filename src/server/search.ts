@@ -19,9 +19,9 @@ const searchEntriesQuery = `
         }
       },
       limit: 5,
-      order_by: { vault: { total_shares: desc } }
+      order_by: { term: { total_theoretical_value_locked: desc } }
     ) {
-      id
+      term_id
       data
       label
       type
@@ -37,15 +37,15 @@ const searchEntriesQuery = `
         object_id
       }
       block_timestamp
-      vault {
-        total_shares
+      term {
+        total_theoretical_value_locked
       }
     }
   }
 `
 
 interface AtomResult {
-  id: number
+  term_id: number
   data: string
   label: string
   type: string
@@ -61,8 +61,8 @@ interface AtomResult {
     object_id: number
   }>
   block_timestamp: string
-  vault: {
-    total_shares: string
+  term: {
+    total_theoretical_value_locked: string
   }
 }
 
@@ -71,13 +71,13 @@ interface SearchResponse {
 }
 
 export interface SearchResult {
-  id: string
+  term_id: string
   name: string
   description: string
   image: string
   url: string
-  vault: {
-    total_shares: string
+  term: {
+    total_theoretical_value_locked: string
   }
 }
 
@@ -91,12 +91,12 @@ async function searchTerm(searchStr: string, typePredicateId: string, entryTypeI
   })
 
   return result.atoms.map((atom) => ({
-    id: atom.id.toString(),
+    term_id: atom.term_id.toString(),
     name: atom.value.thing.name,
     description: atom.value.thing.description || atom.data || '',
     image: atom.value.thing.image,
     url: atom.value.thing.url,
-    vault: atom.vault
+    term: atom.term
   }))
 }
 
@@ -115,11 +115,11 @@ export async function searchEntries(searchStr: string): Promise<SearchResult[]> 
   const frequencyMap = new Map<string, { result: SearchResult; count: number }>()
 
   termResults.flat().forEach(result => {
-    const existing = frequencyMap.get(result.id)
+    const existing = frequencyMap.get(result.term_id)
     if (existing) {
       existing.count++
     } else {
-      frequencyMap.set(result.id, { result, count: 1 })
+      frequencyMap.set(result.term_id, { result, count: 1 })
     }
   })
 
@@ -129,7 +129,7 @@ export async function searchEntries(searchStr: string): Promise<SearchResult[]> 
     .filter(item => item.count >= terms.length)
     .sort((a, b) => {
       if (b.count !== a.count) return b.count - a.count
-      return Number(b.result.vault.total_shares) - Number(a.result.vault.total_shares)
+      return Number(b.result.term.total_theoretical_value_locked) - Number(a.result.term.total_theoretical_value_locked)
     })
     .map(item => item.result)
 

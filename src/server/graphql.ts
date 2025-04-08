@@ -46,7 +46,7 @@ export const pinThing = async (thing: PinThingInput) => {
 // Query atoms by name
 export type QueryAtomByNameResponse = {
   atoms: Array<{
-    id: string
+    term_id: string
   }>
 }
 
@@ -64,12 +64,12 @@ export const queryAtomBySchemaValues = async (name: string, description: string,
             }
           }
         }) {
-          id
+          term_id
         }
       }
     `, { name, description, image, url })
     if (result.atoms.length > 0) {
-      return BigInt(result.atoms[0].id)
+      return BigInt(result.atoms[0].term_id)
     }
     return null
   } catch (error) {

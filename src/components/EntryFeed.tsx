@@ -162,10 +162,10 @@ export function EntryFeed({ initialEntries }: EntryFeedProps) {
                 <CommandGroup>
                   {searchResults.map((entry) => (
                     <CommandItem
-                      key={entry.id}
-                      value={entry.id}
+                      key={entry.term_id}
+                      value={entry.term_id}
                       onSelect={() => {
-                        router.push(`/entry/${entry.id}`)
+                        router.push(`/entry/${entry.term_id}`)
                         setSearchQuery('')
                       }}
                     >
@@ -187,9 +187,9 @@ export function EntryFeed({ initialEntries }: EntryFeedProps) {
                               </Text>
                               <Text variant="caption" className="text-gray-500 whitespace-nowrap">
                                 ·{' '}
-                                {entry.vault?.total_shares
-                                  ? `${Number(entry.vault.total_shares).toExponential(2)} shares`
-                                  : 'No shares'}
+                                {entry.term?.total_theoretical_value_locked
+                                  ? `${Number(entry.term.total_theoretical_value_locked).toExponential(2)} TVL`
+                                  : 'No TVL'}
                               </Text>
                             </div>
                           )}

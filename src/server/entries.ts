@@ -7,7 +7,7 @@ import { getVaultTotals } from '@/server/contracts'
 type GetEntriesResponse = {
   triples: Array<{
     subject: {
-      id: string
+      term_id: string
       value: {
         thing: {
           name: string
@@ -26,7 +26,7 @@ type GetEntriesResponse = {
         }
       }
       subject_triples: Array<{
-        id: string
+        term_id: string
       }>
     }
   }>
@@ -51,7 +51,7 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
         order_by: ORDER_BY_PLACEHOLDER
       ) {
         subject {
-          id
+          term_id
           value {
             thing {
               name
@@ -62,8 +62,8 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
           }
           creator_id
           block_timestamp
-          vault {
-            total_shares
+          term {
+            total_theoretical_value_locked
           }
         }
       }
@@ -74,9 +74,9 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
   if (listType === 'RECENT') {
     query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ block_timestamp: desc }]')
   } else if (listType === 'TRENDING') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ vault: { total_shares: desc } }, { block_timestamp: desc }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_theoretical_value_locked: desc } }, { block_timestamp: desc }]')
   } else if (listType === 'TOP') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ vault: { total_shares: desc } }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_theoretical_value_locked: desc } }]')
   }
 
   try {
@@ -91,12 +91,12 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
 
     const entriesWithAssets = await Promise.all(result.triples.map(async triple => {
       const atom = triple.subject
-      const totals = await getVaultTotals(BigInt(atom.id))
+      const totals = await getVaultTotals(BigInt(atom.term_id))
       console.log("totals: ", totals)
 
-      const numSubEntries = await getNumSubEntriesForEntry(atom.id)
+      const numSubEntries = await getNumSubEntriesForEntry(atom.term_id)
       return {
-        id: atom.id,
+        id: atom.term_id,
         name: atom.value.thing.name,
         description: atom.value.thing.description,
         image: atom.value.thing.image,
@@ -115,14 +115,14 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
   }
 }
 
-export async function getEntryById(id: string): Promise<Entry | null> {
+export async function getEntryById(term_id: string): Promise<Entry | null> {
   // Get the necessary atom IDs first
   const { predicateId: typePredicateId, entryId: entryTypeId } = await getTypeTagAtomIds()
 
   const query = `
-    query GetEntry($id: numeric!, $typePredicateId: numeric!, $entryTypeId: numeric!) {
-      atom(id: $id) {
-        id
+    query GetEntry($term_id: numeric!, $typePredicateId: numeric!, $entryTypeId: numeric!) {
+      atom(term_id: $term_id) {
+        term_id
         value {
           thing {
             name
@@ -135,11 +135,11 @@ export async function getEntryById(id: string): Promise<Entry | null> {
         block_timestamp
       }
       triples(where: {
-        subject_id: { _eq: $id },
+        subject_id: { _eq: $term_id },
         predicate_id: { _eq: $typePredicateId },
         object_id: { _eq: $entryTypeId }
       }) {
-        id
+        term_id
       }
     }
   `
@@ -147,7 +147,7 @@ export async function getEntryById(id: string): Promise<Entry | null> {
   try {
     const result = await client.request<{
       atom: {
-        id: string
+        term_id: string
         value: {
           thing: {
             name: string
@@ -166,9 +166,9 @@ export async function getEntryById(id: string): Promise<Entry | null> {
           }
         }
       }
-      triples: Array<{ id: string }>
+      triples: Array<{ term_id: string }>
     }>(query, {
-      id: parseInt(id),
+      term_id: parseInt(term_id),
       typePredicateId: typePredicateId.toString(),
       entryTypeId: entryTypeId.toString()
     })
@@ -177,9 +177,9 @@ export async function getEntryById(id: string): Promise<Entry | null> {
 
     const atom = result.atom
 
-    const totals = await getVaultTotals(BigInt(atom.id))
+    const totals = await getVaultTotals(BigInt(atom.term_id))
     return {
-      id: atom.id,
+      id: atom.term_id,
       name: atom.value.thing.name,
       description: atom.value.thing.description,
       image: atom.value.thing.image,
