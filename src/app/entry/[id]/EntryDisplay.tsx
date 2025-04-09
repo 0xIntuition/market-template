@@ -45,13 +45,13 @@ export default function EntryDisplay({ entry }: EntryDisplayProps) {
             )}
           </div>
 
-          {showSubEntryForm && <NewSubEntryForm entryId={entry.id} />}
+          {showSubEntryForm && <NewSubEntryForm entryId={entry.term_id} />}
 
           {/* Existing Sub-Entries */}
           {entry.subEntries && entry.subEntries.length > 0 ? (
             <div className="space-y-4">
               {entry.subEntries.map((subEntry) => (
-                <Card key={subEntry.id} className="p-4">
+                <Card key={subEntry.term_id} className="p-4">
                   <EntryCard entry={subEntry} showShare={false} truncate={false} />
                 </Card>
               ))}
