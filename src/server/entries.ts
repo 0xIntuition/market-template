@@ -8,7 +8,7 @@ type GetEntriesResponse = {
   triples: Array<{
     subject: {
       term_id: string
-      value: {
+      atom_value: {
         thing: {
           name: string
           description: string
@@ -38,6 +38,9 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
   // These atom IDs are used to filter Intuition Data for the "Entry" type defined by this app.
   const { predicateId: isTypeTypeId, entryId: entryTypeId } = await getTypeTagAtomIds()
 
+  console.log("GET ENTRIES PREDICATE ID: ", isTypeTypeId)
+  console.log("GET ENTRIES ENTRY ID: ", entryTypeId)
+
   // This query fetches all "Entry" type atoms from Intuition Data.
   const baseQuery = `
     query GetEntries($isTypeTypeId: numeric!, $entryTypeId: numeric!, $limit: Int!, $offset: Int!) {
@@ -52,7 +55,7 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
       ) {
         subject {
           term_id
-          value {
+          atom_value {
             thing {
               name
               description
@@ -63,7 +66,7 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
           creator_id
           block_timestamp
           term {
-            total_theoretical_value_locked
+            total_market_cap
           }
         }
       }
@@ -74,9 +77,9 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
   if (listType === 'RECENT') {
     query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ block_timestamp: desc }]')
   } else if (listType === 'TRENDING') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_theoretical_value_locked: desc } }, { block_timestamp: desc }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_market_cap: desc } }, { block_timestamp: desc }]')
   } else if (listType === 'TOP') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_theoretical_value_locked: desc } }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_market_cap: desc } }]')
   }
 
   try {
@@ -97,10 +100,10 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
       const numSubEntries = await getNumSubEntriesForEntry(atom.term_id)
       return {
         id: atom.term_id,
-        name: atom.value.thing.name,
-        description: atom.value.thing.description,
-        image: atom.value.thing.image,
-        url: atom.value.thing.url,
+        name: atom.atom_value.thing.name,
+        description: atom.atom_value.thing.description,
+        image: atom.atom_value.thing.image,
+        url: atom.atom_value.thing.url,
         totalAssets: totals.totalAssets.toString(),
         totalShares: totals.totalShares.toString(),
         createdAt: new Date(parseInt(atom.block_timestamp) * 1000).toISOString(),
@@ -123,7 +126,7 @@ export async function getEntryById(term_id: string): Promise<Entry | null> {
     query GetEntry($term_id: numeric!, $typePredicateId: numeric!, $entryTypeId: numeric!) {
       atom(term_id: $term_id) {
         term_id
-        value {
+        atom_value {
           thing {
             name
             description
@@ -148,7 +151,7 @@ export async function getEntryById(term_id: string): Promise<Entry | null> {
     const result = await client.request<{
       atom: {
         term_id: string
-        value: {
+        atom_value: {
           thing: {
             name: string
             description: string
@@ -180,10 +183,10 @@ export async function getEntryById(term_id: string): Promise<Entry | null> {
     const totals = await getVaultTotals(BigInt(atom.term_id))
     return {
       id: atom.term_id,
-      name: atom.value.thing.name,
-      description: atom.value.thing.description,
-      image: atom.value.thing.image,
-      url: atom.value.thing.url,
+      name: atom.atom_value.thing.name,
+      description: atom.atom_value.thing.description,
+      image: atom.atom_value.thing.image,
+      url: atom.atom_value.thing.url,
       totalAssets: totals.totalAssets.toString(),
       totalShares: totals.totalShares.toString(),
       createdAt: new Date(parseInt(atom.block_timestamp) * 1000).toISOString(),
@@ -204,7 +207,7 @@ export async function getAppEntry(): Promise<Entry | null> {
     query GetEntry($id: numeric!) {
       atom(id: $id) {
         id
-        value {
+        atom_value {
           thing {
             name
             description
@@ -222,7 +225,7 @@ export async function getAppEntry(): Promise<Entry | null> {
     const result = await client.request<{
       atom: {
         id: string
-        value: {
+        atom_value: {
           thing: {
             name: string
             description: string
@@ -251,10 +254,10 @@ export async function getAppEntry(): Promise<Entry | null> {
     const totals = await getVaultTotals(BigInt(atom.id))
     return {
       id: atom.id,
-      name: atom.value.thing.name,
-      description: atom.value.thing.description,
-      image: atom.value.thing.image,
-      url: atom.value.thing.url,
+      name: atom.atom_value.thing.name,
+      description: atom.atom_value.thing.description,
+      image: atom.atom_value.thing.image,
+      url: atom.atom_value.thing.url,
       totalAssets: totals.totalAssets.toString(),
       totalShares: totals.totalShares.toString(),
       createdAt: new Date(parseInt(atom.block_timestamp) * 1000).toISOString(),

@@ -10,8 +10,8 @@ const searchEntriesQuery = `
         _or: [
           { data: { _ilike: $searchStr } },
           { label: { _ilike: $searchStr } },
-          { value: { thing: { name: { _ilike: $searchStr } } } },
-          { value: { thing: { description: { _ilike: $searchStr } } } }
+          { atom_value: { thing: { name: { _ilike: $searchStr } } } },
+          { atom_value: { thing: { description: { _ilike: $searchStr } } } }
         ],
         as_subject_triples: {
           predicate_id: { _eq: $typePredicateId },
@@ -19,13 +19,13 @@ const searchEntriesQuery = `
         }
       },
       limit: 5,
-      order_by: { term: { total_theoretical_value_locked: desc } }
+      order_by: { term: { total_market_cap: desc } }
     ) {
       term_id
       data
       label
       type
-      value {
+      atom_value {
         thing {
           name
           description
@@ -38,7 +38,7 @@ const searchEntriesQuery = `
       }
       block_timestamp
       term {
-        total_theoretical_value_locked
+        total_market_cap
       }
     }
   }
@@ -49,7 +49,7 @@ interface AtomResult {
   data: string
   label: string
   type: string
-  value: {
+  atom_value: {
     thing: {
       name: string
       description: string
@@ -62,7 +62,7 @@ interface AtomResult {
   }>
   block_timestamp: string
   term: {
-    total_theoretical_value_locked: string
+    total_market_cap: string
   }
 }
 
@@ -77,7 +77,7 @@ export interface SearchResult {
   image: string
   url: string
   term: {
-    total_theoretical_value_locked: string
+    total_market_cap: string
   }
 }
 
@@ -92,10 +92,10 @@ async function searchTerm(searchStr: string, typePredicateId: string, entryTypeI
 
   return result.atoms.map((atom) => ({
     term_id: atom.term_id.toString(),
-    name: atom.value.thing.name,
-    description: atom.value.thing.description || atom.data || '',
-    image: atom.value.thing.image,
-    url: atom.value.thing.url,
+    name: atom.atom_value.thing.name,
+    description: atom.atom_value.thing.description || atom.data || '',
+    image: atom.atom_value.thing.image,
+    url: atom.atom_value.thing.url,
     term: atom.term
   }))
 }
@@ -129,7 +129,7 @@ export async function searchEntries(searchStr: string): Promise<SearchResult[]> 
     .filter(item => item.count >= terms.length)
     .sort((a, b) => {
       if (b.count !== a.count) return b.count - a.count
-      return Number(b.result.term.total_theoretical_value_locked) - Number(a.result.term.total_theoretical_value_locked)
+      return Number(b.result.term.total_market_cap) - Number(a.result.term.total_market_cap)
     })
     .map(item => item.result)
 

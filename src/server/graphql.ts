@@ -55,7 +55,7 @@ export const queryAtomBySchemaValues = async (name: string, description: string,
     const result = await client.request<QueryAtomByNameResponse>(`
       query FindAtom($name: String!, $description: String!, $image: String!, $url: String!) {
         atoms(where: {
-          value: {
+          atom_value: {
             thing: {
               name: { _eq: $name },
               description: { _eq: $description },
