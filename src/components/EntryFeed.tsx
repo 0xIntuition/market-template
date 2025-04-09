@@ -187,8 +187,8 @@ export function EntryFeed({ initialEntries }: EntryFeedProps) {
                               </Text>
                               <Text variant="caption" className="text-gray-500 whitespace-nowrap">
                                 ·{' '}
-                                {entry.term?.total_theoretical_value_locked
-                                  ? `${Number(entry.term.total_theoretical_value_locked).toExponential(2)} TVL`
+                                {entry.term?.total_market_cap
+                                  ? `${Number(entry.term.total_market_cap).toExponential(2)} TVL`
                                   : 'No TVL'}
                               </Text>
                             </div>
