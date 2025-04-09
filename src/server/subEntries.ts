@@ -119,7 +119,7 @@ export async function getSubEntriesForEntry(entryId: bigint, limit: number = 10,
 
       const totals = await getVaultTotals(BigInt(atom.term_id))
       const subEntry: SubEntry = {
-        id: atom.term_id,
+        term_id: atom.term_id,
         entryId: entryId.toString(), // Sub entry is associated with input entry ID
         name: atom.value.thing.name,
         description: atom.value.thing.description,
@@ -190,7 +190,7 @@ export async function getSubEntryById(id: string): Promise<SubEntry | null> {
     const totals = await getVaultTotals(BigInt(result.atom.id))
 
     return {
-      id: result.atom.id,
+      term_id: result.atom.id,
       entryId: '', // We need an additional query to find this via triple relationships 
       name: result.atom.value.thing.name,
       description: result.atom.value.thing.description,
