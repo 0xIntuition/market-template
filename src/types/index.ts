@@ -1,5 +1,5 @@
 export interface Entry {
-  id: string;
+  term_id: string;
   name: string;
   description: string;
   image: string;
@@ -13,7 +13,7 @@ export interface Entry {
 }
 
 export interface SubEntry {
-  id: string;
+  term_id: string;
   entryId: string;
   name: string;
   description: string;

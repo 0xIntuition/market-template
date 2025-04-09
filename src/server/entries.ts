@@ -75,11 +75,11 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
   // Then we make sure the query sorts the results by timestamp (recent), timestamp+shares (trending) or shares (top)
   let query = baseQuery;
   if (listType === 'RECENT') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ block_timestamp: desc }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '{ block_timestamp: desc }')
   } else if (listType === 'TRENDING') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_market_cap: desc } }, { block_timestamp: desc }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ subject: { term: { total_market_cap: desc } }}, { block_timestamp: desc }]')
   } else if (listType === 'TOP') {
-    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '[{ term: { total_market_cap: desc } }]')
+    query = baseQuery.replace('ORDER_BY_PLACEHOLDER', '{ subject: { term: { total_market_cap: desc } }}')
   }
 
   try {
@@ -204,9 +204,9 @@ export async function getAppEntry(): Promise<Entry | null> {
   const { objectId: appTypeId } = await getAppTagAtomIds()
 
   const query = `
-    query GetEntry($id: numeric!) {
-      atom(id: $id) {
-        id
+    query GetEntry($term_id: numeric!) {
+      atom(term_id: $term_id) {
+        term_id
         atom_value {
           thing {
             name
@@ -224,7 +224,7 @@ export async function getAppEntry(): Promise<Entry | null> {
   try {
     const result = await client.request<{
       atom: {
-        id: string
+        term_id: string
         atom_value: {
           thing: {
             name: string
@@ -244,16 +244,16 @@ export async function getAppEntry(): Promise<Entry | null> {
         }
       }
     }>(query, {
-      id: appTypeId.toString()
+      term_id: appTypeId.toString()
     })
 
     if (!result.atom) return null
 
     const atom = result.atom
 
-    const totals = await getVaultTotals(BigInt(atom.id))
+    const totals = await getVaultTotals(BigInt(atom.term_id))
     return {
-      id: atom.id,
+      id: atom.term_id,
       name: atom.atom_value.thing.name,
       description: atom.atom_value.thing.description,
       image: atom.atom_value.thing.image,

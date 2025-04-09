@@ -35,13 +35,13 @@ export const TYPE_TAG = {
   },
   entryObject: {
     name: "Entry",
-    description: "An Entry in the Intuition Market Template App",
+    description: "An Entry in the Information Test Markets App",
     image: "",
     url: "",
   },
   subEntryObject: {
     name: "Sub-Entry",
-    description: "A Sub-Entry in the Intuition Market Template App",
+    description: "A Sub-Entry in the Information Test Markets App",
     image: "",
     url: "",
   },

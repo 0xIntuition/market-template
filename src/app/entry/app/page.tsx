@@ -4,14 +4,12 @@ import { getAppEntry } from '@/server/entries'
 import AppEntryDisplay from '@/app/entry/app/AppEntryDisplay'
 import { Suspense } from 'react'
 
-export default function AppEntryPage() {
-  // Await params before using its properties
-
-  const entry = getAppEntry()
+export default async function AppEntryPage() {
+  const entry = await getAppEntry()
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <AppEntryDisplay entry={{ ...entry }} />
+      <AppEntryDisplay entry={entry} />
     </Suspense>
   )
 }

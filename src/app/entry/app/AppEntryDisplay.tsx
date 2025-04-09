@@ -5,16 +5,13 @@ import { Button, Text } from '@0xintuition/1ui'
 import type { Entry } from '@/types'
 import { EntryCard } from '@/components/EntryCard'
 import { Header } from '@/components/Header'
-import { use } from 'react'
 
 interface EntryDisplayProps {
-  entry: Promise<Entry | null>
+  entry: Entry | null
 }
 
 export default function AppEntryDisplay({ entry }: EntryDisplayProps) {
-  const resolvedEntry = use(entry)
-
-  if (!resolvedEntry) {
+  if (!entry) {
     return <div>Entry not found</div>
   }
 
@@ -30,7 +27,7 @@ export default function AppEntryDisplay({ entry }: EntryDisplayProps) {
 
       <div className="space-y-8">
         {/* Main Entry Card */}
-        <EntryCard entry={resolvedEntry} showShare={true} truncate={false} />
+        <EntryCard entry={entry} showShare={true} truncate={false} />
 
         {/* Create Section */}
         <div className="space-y-4">

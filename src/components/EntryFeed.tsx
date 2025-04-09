@@ -111,13 +111,13 @@ export function EntryFeed({ initialEntries }: EntryFeedProps) {
           entries.map(async (entry: Entry) => {
             try {
               const statsResponse = await fetch(
-                `/api/atom-stats?atomId=${entry.id}&userAddress=${primaryWallet.address}`
+                `/api/atom-stats?atomId=${entry.term_id}&userAddress=${primaryWallet.address}`
               )
               if (!statsResponse.ok) throw new Error('Failed to fetch atom stats')
               const stats = await statsResponse.json()
               return { ...entry, stats }
             } catch (err) {
-              console.error(`Failed to fetch stats for entry ${entry.id}:`, err)
+              console.error(`Failed to fetch stats for entry ${entry.term_id}:`, err)
               return entry
             }
           })
@@ -143,7 +143,9 @@ export function EntryFeed({ initialEntries }: EntryFeedProps) {
           <div className="flex justify-between items-center">
             <Text variant="body"></Text>
             <Link href="/entry/new">
-              <Button variant="primary">Create New Entry</Button>
+              <Button variant="primary" disabled title="Disabled for testing">
+                Create New Entry
+              </Button>
             </Link>
           </div>
 
@@ -238,7 +240,7 @@ export function EntryFeed({ initialEntries }: EntryFeedProps) {
         ) : (
           <div className="space-y-4">
             {entries.map((entry) => (
-              <Link key={entry.id} href={`/entry/${entry.id}`} className="block p-2">
+              <Link key={entry.term_id} href={`/entry/${entry.term_id}`} className="block p-2">
                 <EntryCard entry={entry} showShare={true} truncate={true} />
               </Link>
             ))}
