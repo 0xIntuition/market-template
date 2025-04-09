@@ -99,7 +99,7 @@ export async function getEntries(offset: number = 0, limit: number = 10, listTyp
 
       const numSubEntries = await getNumSubEntriesForEntry(atom.term_id)
       return {
-        id: atom.term_id,
+        term_id: atom.term_id,
         name: atom.atom_value.thing.name,
         description: atom.atom_value.thing.description,
         image: atom.atom_value.thing.image,
@@ -182,7 +182,7 @@ export async function getEntryById(term_id: string): Promise<Entry | null> {
 
     const totals = await getVaultTotals(BigInt(atom.term_id))
     return {
-      id: atom.term_id,
+      term_id: atom.term_id,
       name: atom.atom_value.thing.name,
       description: atom.atom_value.thing.description,
       image: atom.atom_value.thing.image,
@@ -253,7 +253,7 @@ export async function getAppEntry(): Promise<Entry | null> {
 
     const totals = await getVaultTotals(BigInt(atom.term_id))
     return {
-      id: atom.term_id,
+      term_id: atom.term_id,
       name: atom.atom_value.thing.name,
       description: atom.atom_value.thing.description,
       image: atom.atom_value.thing.image,

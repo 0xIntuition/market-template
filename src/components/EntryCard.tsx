@@ -57,7 +57,7 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
     const userAddress = !primaryWallet?.address ? '0x0000000000000000000000000000000000000000' : primaryWallet.address
 
     try {
-      const response = await fetch(`/api/atom-stats?atomId=${entry.id}&userAddress=${userAddress}`)
+      const response = await fetch(`/api/atom-stats?atomId=${entry.term_id}&userAddress=${userAddress}`)
       if (!response.ok) throw new Error('Failed to fetch atom stats')
       const data = await response.json()
       console.log('Fetched atom stats:', data)
@@ -94,7 +94,7 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
   const fetchPriceCurve = async () => {
     try {
       const response = await fetch(
-        `/api/price-curve?atomId=${entry.id}${stats ? `&totalShares=${stats.vaultTotals.totalShares}` : ''}`
+        `/api/price-curve?atomId=${entry.term_id}${stats ? `&totalShares=${stats.vaultTotals.totalShares}` : ''}`
       )
       if (!response.ok) throw new Error('Failed to fetch price curve')
       const data = await response.json()
@@ -113,7 +113,7 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
 
   useEffect(() => {
     fetchStats()
-  }, [entry.id, primaryWallet?.address])
+  }, [entry.term_id, primaryWallet?.address])
 
   useEffect(() => {
     fetchBalance()
@@ -147,10 +147,10 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
         await navigator.share({
           title: entry.name,
           text: entry.description,
-          url: `${window.location.origin}/entry/${entry.id}`,
+          url: `${window.location.origin}/entry/${entry.term_id}`,
         })
       } else {
-        await navigator.clipboard.writeText(`${window.location.origin}/entry/${entry.id}`)
+        await navigator.clipboard.writeText(`${window.location.origin}/entry/${entry.term_id}`)
       }
       setShareClicked(true)
       setTimeout(() => setShareClicked(false), 2000)
@@ -298,7 +298,7 @@ export function EntryCard({ entry, showShare = false, truncate = true }: EntryCa
           {showSwapModal && primaryWallet ? (
             <SwapModal
               type={swapType}
-              atomId={entry.id}
+              atomId={entry.term_id}
               sharePrice={stats?.sharePrice || '0'}
               userShares={stats?.userState?.shares || '0'}
               userEthBalance={userBalance}
